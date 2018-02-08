@@ -226,7 +226,7 @@ void setup()
 void loop()
 {
   time=time+5;
-  valueGreen=128+127*cos(2*3.1414/1.2*time);
+  valueGreen=128+127*cos(2*3.1414/1.2*time);            ////////////////////////////////////SINFADE
   analogWrite(12,valueGreen);
   analogWrite(2,255);
   //led(1);
