@@ -1,4 +1,3 @@
-//test
 #include <Arduino.h>
 #include <SPI.h>
 //Download the RF24 library from https://github.com/maniacbug/RF24 to make the following inclusions work:
