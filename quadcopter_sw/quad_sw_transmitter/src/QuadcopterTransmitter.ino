@@ -76,7 +76,7 @@ void setup()
   delay(1);
   radio.begin();
   radio.openWritingPipe(pipe);
-  //radio.setPALevel(RF24_PA_MAX);                          ////RF24/PA_MAX is disabled
+  radio.setPALevel(RF24_PA_MAX);                          ////RF24/PA_MAX is disabled
 //  radio.setChannel(0x34);
   //  radio.setDataRate(RF24_1MBPS);
 
