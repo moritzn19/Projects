@@ -15,7 +15,12 @@ Servo aileron;
 Servo elevator;
 Servo gear;
 
-
+int echoPin = 32;
+int triggerPin = 31;
+int abstand=0;
+int dauer=0;
+double entfernung=0;
+bool sendTrigger=true;
 int valueRed;
 int valueBlue;
 int valueGreen;
@@ -113,6 +118,11 @@ void setup()
   //radio.setDataRate(RF24_1MBPS);
   //Serial.println("Setup starting. Waiting for gear command.");
 
+  //Ultraschallsensoren
+  pinMode(triggerPin,OUTPUT);
+  pinMode(echoPin,INPUT);
+  digitalWrite(triggerPin,LOW);
+  sendTrigger=false;
   //GROUND SETUP SEQUENCE
   while (armed == false)
   {
@@ -158,7 +168,6 @@ void setup()
         // Fetch the data payload
         done = radio.read(flightControls, sizeof(flightControls));
       }
-
     }
 
   ////// Serial.println("Disarmed");
@@ -221,10 +230,26 @@ void setup()
     rudder.writeMicroseconds(1500);
     elevator.writeMicroseconds(1470);
     gear.writeMicroseconds(gearSetting);
-}
+  }
 }
 void loop()
 {
+  dauer++;
+  if(sendTrigger==false)
+  {
+    digitalWrite(triggerPin,HIGH);
+    sendTrigger=true;
+    dauer=0;
+  }
+  else
+  {
+    if(digitalRead(echoPin)==HIGH)
+    {
+      entfernung=dauer/2;
+      sendTrigger=false;
+    }
+  }
+  Serial.println("Entfernung="+(String) entfernung);
   time=time+5;
   valueGreen=128+127*cos(2*3.1414/1.2*time);            ////////////////////////////////////SINFADE
   analogWrite(12,valueGreen);
@@ -256,6 +281,7 @@ void loop()
   aileron.writeMicroseconds(flightControls[1]);
   rudder.writeMicroseconds(flightControls[2]);
   elevator.writeMicroseconds(flightControls[3]);
+  digitalWrite(triggerPin,LOW);
 }
 
 void emergencyLanding()
