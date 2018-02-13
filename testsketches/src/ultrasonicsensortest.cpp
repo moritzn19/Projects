@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-int trigger=7;
-int echo=6;
+int trigger=1;
+int echo=0;
 long dauer=0;
 long entfernung=0;
 void setup()

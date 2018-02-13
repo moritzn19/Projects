@@ -15,7 +15,7 @@ Servo aileron;
 Servo elevator;
 Servo gear;
 
-int echoPin = 32;
+int echoPin = 30;
 int triggerPin = 31;
 int abstand=0;
 int dauer=0;
@@ -276,7 +276,7 @@ void loop()
     }
   }
   throttleSetting = flightControls[0]; //We store the value of the throttle for safety during emergencyLanding()
-  Serial.println("Armed. t =" + (String) throttleSetting + " a = " + (String) flightControls[1] + " r = " + (String) flightControls[2] + " e = " + (String) flightControls[3]);
+  //Serial.println("Armed. t =" + (String) throttleSetting + " a = " + (String) flightControls[1] + " r = " + (String) flightControls[2] + " e = " + (String) flightControls[3]);
   throttle.writeMicroseconds(flightControls[0]);
   aileron.writeMicroseconds(flightControls[1]);
   rudder.writeMicroseconds(flightControls[2]);
