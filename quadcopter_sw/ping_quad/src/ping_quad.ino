@@ -42,6 +42,7 @@ void loop()
 
   throttle_read = pulseIn(pinReadCh3, HIGH); //Reads the throttle level, returns 1150 - 1839 microseconds. 1 millisecond = 1000 microseconds -> throttle_read/1000: ex 1,736ms
   alt_hold_switch = pulseIn(pinReadCh6, HIGH); //Reads the ch6 level
+  map(alt_hold_switch, 0, 1024, 0, 1800);
   Serial.print("alt_hold_switch=");
   Serial.println(alt_hold_switch);
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
