@@ -44,6 +44,16 @@ int gearSetting = 1855;
 int lostRadioCount = 0;
 int periode = 50;
 int displace = 500;
+
+///////////////////////////////////////////////BatteryCheck//////////////////////////////
+const int numReadings = 20;
+
+int readings[numReadings];      // the readings from the analog input
+int readIndex = 0;              // the index of the current reading total = 0;
+int total   =0;   // the running total
+int average = 0;                // the average
+
+
 // int LEDG = 45;
 // int LEDR = 44;
 uint32_t currTime, attiTime; //Left over from Naza Decoder test code. Probably useless, but keeping out of superstition
@@ -72,6 +82,16 @@ void setup()
   pinMode(blueLedPin, OUTPUT);
   //pinMode(redLedPin, OUTPUT);
   pinMode(yellowLedPin, OUTPUT);
+
+///////////////////////////BatteryCheck////////////////////
+
+  pinMode(23, OUTPUT);
+
+
+  for (int thisReading = 0; thisReading < numReadings; thisReading++) {
+     readings[thisReading] = 0;
+   }
+///////////////////////////BatteryCheck////////////////////
   valueRed=0;
   valueGreen=0;
   valueBlue=0;
@@ -249,11 +269,37 @@ void loop()
       sendTrigger=false;
     }
   }
-  Serial.println("Entfernung="+(String) entfernung);
+  //Serial.println("Entfernung="+(String) entfernung);
   time=time+5;
   valueGreen=128+127*cos(2*3.1414/1.2*time);            ////////////////////////////////////SINFADE
   analogWrite(12,valueGreen);
   analogWrite(2,255);
+
+///////////////////////////////////BatteryCheck///////////////////////////////////////
+
+  int BatVoltage = analogRead(A0);
+  float voltage = (BatVoltage * (4.99 / 1023))*100;
+
+  total = total - readings[readIndex];
+  readings[readIndex] = voltage;
+  total = total + readings[readIndex];
+  readIndex = readIndex + 1;
+  if (readIndex >= numReadings)
+  {
+    readIndex = 0;
+  }
+
+  average = total / numReadings;
+
+
+  Serial.println(BatVoltage);
+
+  if (average < 3.6)
+  {
+    digitalWrite(23, HIGH);
+  }
+
+///////////////////////////////////BatteryCheck///////////////////////////////////////
   //led(1);
   //Serial.println("Armed." + (String) flightControls[0] + " " + (String) flightControls[1] + " " + (String) flightControls[2] + " " + (String) flightControls[3]);
   if (radio.available())

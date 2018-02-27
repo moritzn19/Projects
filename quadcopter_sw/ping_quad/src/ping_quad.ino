@@ -9,7 +9,7 @@ where you will find updates and troubleshooting tips.
 #include <Wire.h>
 #include <NewPing.h>
 
-#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on  the ultrasonic sensor.
 #define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 400 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
@@ -21,7 +21,7 @@ Servo myThrottleChOut;
 
 
 int throttlePin1 = 9; //output
-int pinReadCh6 = 6; //Reads channel 6 from RX
+int pinReadCh6 = 0; //Reads channel 6 from RX
 int pinReadCh3 = 3; //Reads channel 3 from RX
 int led = 10;
 unsigned long throttle_read;
@@ -41,8 +41,8 @@ void loop()
 {
 
   throttle_read = pulseIn(pinReadCh3, HIGH); //Reads the throttle level, returns 1150 - 1839 microseconds. 1 millisecond = 1000 microseconds -> throttle_read/1000: ex 1,736ms
-  alt_hold_switch = pulseIn(pinReadCh6, HIGH); //Reads the ch6 level
-  map(alt_hold_switch, 0, 1024, 0, 1800);
+  alt_hold_switch = analogRead(pinReadCh6); //Reads the ch6 level
+  alt_hold_switch= map(alt_hold_switch, 0, 1024, 0, 1800);
   Serial.print("alt_hold_switch=");
   Serial.println(alt_hold_switch);
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
@@ -52,12 +52,12 @@ void loop()
         int distance = (uS / US_ROUNDTRIP_CM); //Gets the altitude when entering altitude hold mode, this will be a reference
         throttle_output = throttle_read;
 
-  if (alt_hold_switch > 1700) //If the ch6 knob is turned almost to max, arduino enter altitude hold mode
+  if (alt_hold_switch_neu > 1700) //If the ch6 knob is turned almost to max, arduino enter altitude hold mode
   {
 
 
 
-        while (alt_hold_switch > 1700) //If the ch6 knob is turned almost to max, arduino enters altitude control loop.
+        while (alt_hold_switch_neu > 1700) //If the ch6 knob is turned almost to max, arduino enters altitude control loop.
         {
             digitalWrite(led, HIGH);
             unsigned int uS2 = sonar.ping(); // Send ping, get ping time in microseconds (uS).
